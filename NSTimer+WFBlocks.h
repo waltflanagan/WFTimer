@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Simons, Mike. All rights reserved.
 //
 
-typedef void(^WFTimerBlock)(NSTimer*);
+typedef void(^WFTimerBlock)(NSTimer* timerBlock);
 
 @interface NSTimer (WFBlocks)
 
