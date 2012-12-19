@@ -7,21 +7,34 @@
 //
 
 #import "NSTimer+WFBlocks.h"
+#import <objc/runtime.h>
+
+NSString* const kBlockStoreKey = @"kWFTimerBlockStoreKey";
+
+@interface BlockRunner : NSObject
+
+@property (strong, nonatomic) WFTimerBlock internalBlock;
+
+@end
+
+@implementation BlockRunner
+
+-(void) executeBlock:(NSTimer*)timer
+{
+   self.internalBlock(timer);
+}
+
+@end
 
 @implementation NSTimer (WFBlocks)
 
 +(NSTimer*)timerWithTimeInterval:(NSTimeInterval)interval block:(WFTimerBlock)block repeats:(BOOL)repeats
 {
-   NSMethodSignature* executeBlockSignature = [NSTimer instanceMethodSignatureForSelector:@selector(executeBlock:)];
-   NSInvocation* timerInvocation = [NSInvocation invocationWithMethodSignature:executeBlockSignature];
+   BlockRunner* theBlockRunner = [BlockRunner new];
+   theBlockRunner.internalBlock = block;
    
-   NSTimer* timer = [NSTimer timerWithTimeInterval:interval invocation:timerInvocation repeats:repeats];
+   NSTimer* timer = [NSTimer timerWithTimeInterval:interval target:theBlockRunner selector:@selector(executeBlock:) userInfo:nil repeats:repeats];
    
-   [timerInvocation setTarget:timer];
-   [timerInvocation setSelector:@selector(executeBlock:)];
-   
-   [timerInvocation setArgument:&block atIndex:2];
-
    return timer;
 }
 
@@ -33,12 +46,6 @@
 
    return timer;
 };
-
-
--(void) executeBlock:(WFTimerBlock)block
-{
-   block(self);
-}
 
 
 
