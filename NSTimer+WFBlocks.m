@@ -9,8 +9,6 @@
 #import "NSTimer+WFBlocks.h"
 #import <objc/runtime.h>
 
-NSString* const kBlockStoreKey = @"kWFTimerBlockStoreKey";
-
 @interface BlockRunner : NSObject
 
 @property (strong, nonatomic) WFTimerBlock internalBlock;
