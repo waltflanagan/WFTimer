@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Simons, Mike. All rights reserved.
 //
 
+@import Foundation;
+
 typedef void(^WFTimerBlock)(NSTimer* timer);
 
 @interface NSTimer (WFBlocks)
